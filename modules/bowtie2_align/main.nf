@@ -3,7 +3,7 @@
 process BOWTIE2_ALIGN {
     label 'process_high'
     container 'ghcr.io/bf528/bowtie2:latest'
-    publishDir params.outdir, mode: "copy"
+    publishDir "${params.outdir}/bowtie2_align", mode: "copy"
 
     input:
     tuple val(sample), path(reads)

@@ -3,7 +3,7 @@
 process TRIM {
     label 'process_medium'
     container 'ghcr.io/bf528/trimmomatic:latest'
-    publishDir "${params.outdir}/trimmed", mode: "copy"
+    publishDir "${params.outdir}/trimmomatic", mode: "copy"
 
     input:
     tuple val(sample), path(read)

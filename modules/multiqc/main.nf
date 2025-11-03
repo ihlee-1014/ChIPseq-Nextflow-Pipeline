@@ -1,10 +1,9 @@
 #!/usr/bin/bash nextflow
 
 process MULTIQC {
-
     label 'process_low'
     container 'ghcr.io/bf528/multiqc:latest'
-    publishDir params.outdir, mode: "copy"
+    publishDir "${params.outdir}/multiqc", mode: "copy"
 
     input:
     path("*")

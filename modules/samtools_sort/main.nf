@@ -3,7 +3,7 @@
 process SAMTOOLS_SORT {
     label 'process_single'
     container 'ghcr.io/bf528/samtools:latest'
-    publishDir params.outdir, mode: 'copy'
+    publishDir "${params.outdir}/samtools_sort", mode: 'copy'
 
     input:
     tuple val(sample), path(bam)

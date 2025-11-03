@@ -3,7 +3,7 @@
 process BAMCOVERAGE {
     label 'process_medium'
     container 'ghcr.io/bf528/deeptools:latest'
-    publishDir params.outdir, mode: 'copy'
+    publishDir "${params.outdir}/bamcoverage", mode: 'copy'
 
     input:
     tuple val(sample), path(bam), path(bai)

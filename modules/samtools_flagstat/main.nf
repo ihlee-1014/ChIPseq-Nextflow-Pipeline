@@ -3,7 +3,7 @@
 process SAMTOOLS_FLAGSTAT {
     label 'process_single'
     container 'ghcr.io/bf528/samtools:latest'
-    publishDir params.outdir, mode: 'copy'
+    publishDir "${params.outdir}/samtools_flagstat", mode: 'copy'
 
     input:
     tuple val(sample), path(bam)
