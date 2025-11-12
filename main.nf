@@ -16,10 +16,13 @@ include {POS2BED} from './modules/homer_pos2bed'
 include {BEDTOOLS_INTERSECT} from './modules/bedtools_intersect'
 include {BEDTOOLS_REMOVE} from './modules/bedtools_remove'
 include {ANNOTATE} from './modules/homer_annotatepeaks'
+include {COMPUTEMATRIX} from './modules/deeptools_computematrix'
+include {PLOTPROFILE} from './modules/deeptools_plotprofile'
+include {FIND_MOTIFS_GENOME} from './modules/homer_findmotifsgenome'
 
 workflow {
     //Here we construct the initial channels we need
-    Channel.fromPath(params.subsampled_samplesheet)
+    Channel.fromPath(params.samplesheet)
     | splitCsv( header: true )
     | map{ row -> tuple(row.name, file(row.path)) }
     | set { read_ch }
@@ -54,6 +57,7 @@ workflow {
     // generate bigwig files
     BAMCOVERAGE(SAMTOOLS_IDX.out)
 
+    // compile all bigwig files into a channel
     bigwigs_ch = BAMCOVERAGE.out
         .map { tuple -> tuple[1]}
         .collect()
@@ -125,4 +129,21 @@ workflow {
 
     // annotate peaks to their nearest genomic feature
     ANNOTATE(BEDTOOLS_REMOVE.out, params.genome, params.gtf)
+
+    // compile all IP bigwig files into a channel
+    ipbigwigs_ch = BAMCOVERAGE.out
+        .filter { sample, bw -> sample.toString().contains('IP_') }
+        .map { sample, bw -> tuple(sample, bw) }
+
+    //ipbigwigs_ch.view()
+
+    // generate matrix file containing counts of reads falling into regions in bed files
+    COMPUTEMATRIX(ipbigwigs_ch, params.ucsc_genes, params.window)
+
+    // generate visualization of read counts from IP samples
+    // across the body of genes from the hg38 reference
+    PLOTPROFILE(COMPUTEMATRIX.out)
+
+    // motif enrichment analysis on reproducible filtered peaks
+    FIND_MOTIFS_GENOME(BEDTOOLS_REMOVE.out, params.genome)
 }
