@@ -1,32 +1,27 @@
-# Project 3 Nextflow Template
+# RNAseq Nextflow Pipeline
 
-For this project, remember to keep in a few things:
+The following README contains directions on how to run the ChIPSeq Nextflow pipeline.  
 
-1. Most of the required references and files can be found in your `nextflow.config`
+Our final project is based on [Barutcu et al. 2016](https://doi.org/10.1016/j.bbagrm.2016.08.003),
+which is focused on how the RUNX1 transcription factor contributes to chromatin organization of breast cancer cells via ChIP-seq integrated with Hi-C and gene expression analysis. In this project, we reproduce the ChIP-seq analysis techniques of the reference publication, examine significant peaks, and compare results to the original publication.  
 
-2. Make sure you give each process a label to request an appropriate amount of resources
+This repository consists of the following files:  
 
-3. Use the singularity containers provided on the website directions for the project
+| File(s) | Path | Description |
+| :------- | :------ | :------- |
+| Nextflow Pipeline     | `main.nf` | Consists of a full Nextflow pipeline that processes the ChIP-seq data from Barutcu et al. 2016.    |
+| Jupyter Notebook Report  | `project03_report.ipynb`   | Consists of a Jupyter Notebook report that runs analyses on our ChIP-seq data.   |
+| Jupyter Notebook Report PDF | `project03_report.pdf` | Consists of our report in `.pdf` format. |
+| Nextflow Modules | `modules/` | Consists of all Nextflow modules and their `main.nf` files used to run the pipeline. |
+| Nextflow Configuration | `nextflow.config` | Consists of all parameters and settings used to run the Nextflow pipeline. |  
+| Samplesheet | `full_samplesheet.csv` | Consists of sample names and paths to samples. Please change file paths if necessary.* |
+| DAG of Pipeline | `project-3-pipeline.png` | Consists of a DAG visualization of the Nextflow pipeline. |
 
-4. I have given you valid stub commands that will let you troubleshoot your workflow logic using the `-stub-run` command
-- The stub-run commands assume that the first element in the tuple from the initial channel is named `sample_id` in processes
-- Ensure that the appropriate inputs for certain processes are a tuple with the first element being the name from the initial channel
-- The findPeaks stub will not be the same as `sample_id`. Remember that you will need to run findPeaks using the paired samples
-(IP_rep1 + INPUT_rep1) and (IP_rep2 + INPUT_rep2). You should name the peak outputs using the replicate (i.e. rep1_peaks.txt and rep2_peaks.txt)
-- You may alter the names used in the stub-run if it's easier for you
-
-The stub runs assume that you have something like below so that it can name the fake files using the sample names - this will ensure
-that your stub runs execute the same number of processes as the full pipeline should.
+To run the Nextflow pipeline, please run the command:
 ```
-input:
-tuple val(sample_id), path(file)
+nextflow run main.nf -profile singularity,local
 ```
 
-5. Use the subsampled data to start out with - you may need to eventually switch to the full data before your
-pipeline is technically complete as sometimes peak calling may fail if not given enough input reads. 
-- When the pipeline is working, change the `params` value in the original channel to the params encoding the
-location of the full_samplesheet.csv
+*All sample data were downloaded from the original publication. Please download the .fastq files and edit the file paths in `full_samplesheet.csv` before running the pipeline.
 
-6. To remove regions using the blacklist, there are optional flags available in the `bedtools intersect` command
-
-7. Create a single jupyter notebook that contains all of the results / figures and your write-up
+Feel free to change any file paths if necessary.
